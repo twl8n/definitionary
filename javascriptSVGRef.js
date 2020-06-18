@@ -58,11 +58,12 @@ function drawTextBox2(e) {
 }
 
 
-	
 
-
-function drawSVGTextBox(e) {
+function drawSVGTextBox(e,n) {
 	//draw SVG text box at cursor location
+	
+	if (e.target.getAttribute('id') == "svg1"){
+		console.log("targeted " + e.target.getAttribute('id'));
 	
 	const rect = svg1.getBoundingClientRect();
 	
@@ -76,6 +77,7 @@ function drawSVGTextBox(e) {
 	element = document.createElementNS("http://www.w3.org/2000/svg", "text");
 	element.setAttributeNS(null, 'x', x);
 	element.setAttributeNS(null, 'y', y);
+	element.setAttributeNS(null, 'id',n);
 
 	
 	element.appendChild(t);
@@ -91,22 +93,43 @@ function drawSVGTextBox(e) {
 	rect1.setAttributeNS(null,"width",SVGRect.width);
 	rect1.setAttributeNS(null,"height",SVGRect.height);
 	rect1.setAttributeNS(null,"fill","cyan");
-	rect1.setAttributeNS(null,"onclick","remove");
+	rect1.setAttributeNS(null,"id","rect" + n);
 	
-	textElem = svg1.getElementById(element);
-	console.log(textElem);
+	console.log(rect1);
 
 	
 	svg1.appendChild(rect1);
-	console.log(rect1);
 	svg1.appendChild(element);	
+	
+	console.log(n);
+	
+	n++;
+	return n;
+	
+	}
+	else {
+		console.log(e.target);
+		
+		id = e.target.getAttribute('id')
+		
+		console.log(id);
+		e.target.remove();
+		svg1.getElementById('rect'+ id).remove();
+		
+		return n;
+	}
 	
 }
 
+var n = 0;
 //svg1.addEventListener("click",drawSVGTextBox,false);
 
+svg1.addEventListener("click",function() {
+	n = drawSVGTextBox(event,n);
+}, false);
 
 
-myCanvas.addEventListener("click", drawTextBox2, false);
+
+//myCanvas.addEventListener("click", drawTextBox2, false);
 
 
