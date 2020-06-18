@@ -18,4 +18,4 @@ simply the lookup of the most common word in the selected output language for th
 the UI includes some mouse-over or similar feature for the text that reveals the text of the definition in the
 selected language.
 
-
+Given that only the most popular single word is used for a given definition+language, we may only supply one word.
