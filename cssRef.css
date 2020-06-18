@@ -1,0 +1,18 @@
+.img-box {
+  margin-top: 50px;
+  width: 450px;
+  height: 200px;
+  position: relative;
+}
+.img-box img {
+  width: 100%;
+  height: auto;
+}
+.img-box h2 {
+  width: auto;
+  height: auto;
+  position: absolute;
+    font-size: 18pt;
+  text-align: center;
+  background-color: lightgreen;
+}
