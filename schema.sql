@@ -59,7 +59,7 @@ insert into topword (did,lang,myword) values  (2,3,"Francés");
 
 .headers on
 .mode column
-select defini.id,defini.is_language,zz.myword,dtext.lang,(select myword from topword xx where xx.did=dtext.lang) as lang
+select defini.id,defini.is_language,zz.myword as languge_name, dtext.lang in_lang,(select myword from topword xx where xx.did=dtext.lang and xx.lang=dtext.lang) as same_lang_name
 from defini, dtext, topword zz
 where
     defini.is_language=1
