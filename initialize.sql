@@ -37,7 +37,7 @@ insert into dtext (did,lang,phrase,myword) values (6,1,
 insert into dtext (did,lang,phrase,myword) values (6,2,
         'Individu de l''espèce humaine.','personne');
 insert into dtext (did,lang,phrase,myword) values (6,3,
-        'Individuo de la especie humana.', 'persona'
+        'Individuo de la especie humana.', 'persona');
 
 
 insert into dtext (did,lang,phrase,myword) values (7,1,
@@ -66,7 +66,7 @@ select (select dtext.myword from dtext where did=bb.lang) as lang,myword, phrase
 .headers off
 .mode column
 
-select 'All three languages as defined by each other.'
+select 'All three languages as defined by each other.';
 
 .headers on
 .mode column

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head/>
+  <body>
+    <br>
+    Message: {{sys-msg}}
+    <form action="?add">
+      <select name="language">
+        {{#all-language}}
+        <option value="{{did}}">{{myword}}</option>
+        {{/all-language}}
+      </select>
+      <br>
+      Word: <input type="text" name="word">
+      <br>
+      Defini: <input type="text" name="definition">
+      <br>
+      <input type="submit" name="Submit">
+    </form>
+  </body>
+</html>
