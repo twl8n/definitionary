@@ -20,6 +20,14 @@ selected language.
 
 Given that only the most popular single word is used for a given definition+language, we may only supply one word.
 
+#### Running via clojint aka clojure interpreter
+
+Assuming that clojint.sh and clojint.jar are in your path (for example, in ~/bin), and assuming that 
+
+```
+cd ~/src/definitionary
+java -cp ~/bin/clojint.jar:src clojint.core src/defini/server.clj -m defini.server/-main
+```
 
 #### SQLite notes
 

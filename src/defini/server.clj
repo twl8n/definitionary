@@ -34,7 +34,7 @@
   "Generate a response for some request. Params is working-params, which has injected params for the current request."
   [rmap action params]
   (cond (or (nil? rmap)
-            (nil? (some #{action} [:catreport])))
+            (nil? (some #{action} [:catreport :ext])))
         ;; A redirect would make sense, maybe.
         {:status 200
          :headers {"Content-Type" "text/html"}
@@ -47,6 +47,12 @@
          :body (render-any (assoc rmap
                                   :sys-msg "trying all-language"
                                   :all-language (sql/all-language)) "resources/html/new-defini.html")}
+        (= :ext action)
+        {:status 200
+         :headers {"Content-Type" "text/html"}
+         :body (render-any (assoc rmap
+                                  :sys-msg "trying ext"
+                                  :all-language (load-file "src/defini/ext.clj")) "resources/html/new-defini.html")}
         :else
         {:status 200
          :headers {"Content-Type" "text/html"}
@@ -64,17 +70,14 @@
   ;; (println (with-out-str (pp/pprint request)))
   (if (empty? (:params request))
     (do
-      (println "got an empty request")
       nil)
     (let [temp-params (reduce-kv #(assoc %1 (keyword %2) (keyword (clojure.string/trim %3)))  {} (:params request))
-          _ (prn "tp: " temp-params)
           action (get temp-params :action "no-action")
           ras  request
           ;; rmap is a list of records from the db, will full category data
           ;; If there was no :action this merge will add one. If there was an action, this overwrites it.
           working-params (merge temp-params {:action action :test "this is a test"})
           rmap (request-action working-params action)]
-      (prn "wp: " working-params)
       (reply-action rmap action working-params))))
 
 ;; This def "app" is the only current endpoint. ;; http://localhost:8080/app?whatever
@@ -91,8 +94,6 @@
 ;; http://localhost:8080/app?action=catreport
 (defn -main []
   (ds))
-
-
 
 
 (defn makefresh []

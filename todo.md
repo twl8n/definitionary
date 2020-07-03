@@ -1,5 +1,21 @@
 
-- 2020-06-18 create a server back end, almost certainly in clojure. Maybe babashka?
+- 2020-07-02 Need word+defini create, edit. 
+
+Choose lang.
+Search for existing, if found display edit link(s).
+Add new word + def
+
+Search can start as SQL % match.
+
+Might be nice to have list of words "starting with". Click links to edit.
+
+Will need report of defini that don't have words+def phrase in all languages.
+
++ (mostly done, based on expense-mgr ring server) 2020-06-18 create a server back end, almost certainly in clojure. Maybe babashka?
+
+Simplest to just `lein uberjar` and run the jar file.
+
+Works to use my clojure interpreter, clojint, but I don't see the point in that.
 
 - 2020-06-18 create end points
 

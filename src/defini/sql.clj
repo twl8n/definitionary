@@ -17,7 +17,6 @@
     and
     bb.lang = aa.id"]))
 
-
 ;; https://stackoverflow.com/questions/39765943/clojure-java-jdbc-lazy-query
 ;; https://jdbc.postgresql.org/documentation/83/query.html#query-with-cursor
 ;; http://clojure-doc.org/articles/ecosystem/java_jdbc/using_sql.html#exception-handling-and-transaction-rollback

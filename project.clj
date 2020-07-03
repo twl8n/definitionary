@@ -10,11 +10,8 @@
                  [clj-http "3.7.0"] ;; used in http request experiments
                  [clj-time "0.15.0"]
                  [org.clojure/java.jdbc "0.7.0-alpha3"]
-                 ;; Whereever org.clojure/java.jdbc "0.3.5" came from, it is more than 2 years out of date.
-                 ;; [org.clojure/java.jdbc "0.3.5"]
                  [org.xerial/sqlite-jdbc "3.7.2"]
                  [de.ubercode.clostache/clostache "1.4.0"]
-                 ;; [cljstache "2.0.0"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [ring "1.5.0"]
                  [ring/ring-core "1.2.1"]
