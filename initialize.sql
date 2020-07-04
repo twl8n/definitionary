@@ -18,6 +18,7 @@ insert into dtext (did,lang,phrase,myword) values (3,1,'Spanish language', 'Span
 insert into dtext (did,lang,phrase,myword) values (3,2,'l''Espagnol','Espagnol');
 insert into dtext (did,lang,phrase,myword) values (3,3,'lengua Española', 'Española');
 
+insert into defini (is_language) values (0);
 insert into dtext (did,lang,phrase,myword) values (4,1,
         'A part of an internal combustion engine, usually made as a removable piece, that closes one end of the engine''s cylinders.', 'cylinder head');
 insert into dtext (did,lang,phrase,myword) values (4,2,
@@ -25,6 +26,7 @@ insert into dtext (did,lang,phrase,myword) values (4,2,
 insert into dtext (did,lang,phrase,myword) values (4,3,
         'Parte extraíble de un motor que sella uno o más de sus cilindros', 'culata');
 
+insert into defini (is_language) values (0);
 insert into dtext (did,lang,phrase,myword) values (5,1,
         'article, refers to an unnamed singular thing or person; someone or something.','a');
 insert into dtext (did,lang,phrase,myword) values (5,2,
@@ -32,6 +34,7 @@ insert into dtext (did,lang,phrase,myword) values (5,2,
 insert into dtext (did,lang,phrase,myword) values (5,3,
         'Un hombre, una mujer; alguien o algo. Se utiliza ante nombres no conocidos o que aparecen por vez primera en el discurso o texto.','un');
 
+insert into defini (is_language) values (0);
 insert into dtext (did,lang,phrase,myword) values (6,1,
          'A human individual.','person');
 insert into dtext (did,lang,phrase,myword) values (6,2,
@@ -40,6 +43,7 @@ insert into dtext (did,lang,phrase,myword) values (6,3,
         'Individuo de la especie humana.', 'persona');
 
 
+insert into defini (is_language) values (0);
 insert into dtext (did,lang,phrase,myword) values (7,1,
          'Automobile. A vehicle, typically used on roads, carrying few people, powered by an internal combustion engine.','car');
 insert into dtext (did,lang,phrase,myword) values (7,2,

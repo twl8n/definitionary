@@ -1,0 +1,9 @@
+(defn pq [xx] (java.util.regex.Pattern/quote xx))
+
+#!/usr/bin/env bb
+
+(def db "tmp.db")
+
+(defn query [& args]
+  (apply shell/sh "sqlite3" "-quote" "-header" "-separator" " | " db args))
+

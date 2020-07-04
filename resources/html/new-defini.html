@@ -5,7 +5,8 @@
     New word+definition create
     <br>
     Message: {{sys-msg}}
-    <form action="?add">
+    <form action="app?action=savedefini">
+      <input type="hidden" name="action" value="savedefini"/>
       <table>
         <tr>
           <td>Choose the language of this word </td><td><select name="language">
