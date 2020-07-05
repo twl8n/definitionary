@@ -16,15 +16,26 @@
 ;; Merging temp-params may be bad. We shouldn't trust the temp-params, but we should explicitly
 ;; parse out the params we know we want. 
 
+;; (reduce-kv #(assoc %1 (keyword %2) (clojure.string/trim %3))  {} local-params)
+
+;; 2020-07-03 We used to check (if (empty? local-params) and return nil, but I'm not sure that made sense then or now.
+
+;; Why not return value from engine/run?
 (defn handler 
   "App handler Get request params, call the request action, and call the reply action which should render a web page."
   [request]
-  (let [local-params (:params request)]
-    (if (empty? local-params)
-      nil
-      (reset! defini.engine/params (reduce-kv #(assoc %1 (keyword %2) (keyword (clojure.string/trim %3)))  {} local-params)))
-    (engine/run defini.engine/s-table)
-    @defini.engine/output))
+  (reset! defini.engine/params
+          (reduce-kv
+           (fn [acc kk vv]
+             (let [trim-vv (clojure.string/trim vv)
+                   kword (keyword kk)]
+               (assoc acc kword
+                      (if (= kword :action)
+                        (keyword trim-vv)
+                        trim-vv))))
+           {} (:params request)))
+  (engine/run defini.engine/s-table)
+  @defini.engine/output)
 
 
 ;; This def "app" is the only current endpoint. ;; http://localhost:8080/app?whatever

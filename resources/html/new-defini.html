@@ -7,17 +7,18 @@
     Message: {{sys-msg}}
     <form action="app?action=savedefini">
       <input type="hidden" name="action" value="savedefini"/>
+      <input type="hidden" name="id" value="{{id}}"/>
       <table>
         <tr>
-          <td>Choose the language of this word </td><td><select name="language">
+          <td>Choose the language of this word </td><td><select name="lang">
               {{#all-language}}
-              <option value="{{did}}">{{myword}}</option>
+              <option value="{{id}}" {{#selected}}selected{{/selected}}>{{myword}}</option>
               {{/all-language}}
             </select>
           </td>
         </tr>
-        <tr><td align="right">Word</td><td><input type="text" name="word"></td></tr>
-        <tr><td align="right">Defini</td><td><input type="text" name="definition"></td></tr>
+        <tr><td align="right">Word</td><td><input type="text" name="myword" value="{{myword}}"></td></tr>
+        <tr><td align="right">Defini</td><td><input type="text" name="phrase" value="{{phrase}}"></td></tr>
         <tr><td>&nbsp;</td><td><input type="submit" name="Submit" value="Save word/defini"></td></tr>
       </table>
     </form>

@@ -8,7 +8,7 @@
    })
 
 (defn all-language []
-  (jdbc/query db ["select bb.myword, bb.did
+  (jdbc/query db ["select bb.myword, bb.did as id
   from defini aa, dtext bb
   where
     aa.is_language
@@ -16,6 +16,39 @@
     bb.did =aa.id
     and
     bb.lang = aa.id"]))
+
+;; jdbc/execute! returns number of rows as a list '(1) or '(0) and so on.
+;; jdbc/query returns a list of hash where fields are keys ({:id 1})
+
+(defn save-defini
+  "Insert or update a definition. Return the definition id"
+  [{:keys [id lang myword phrase]}]
+  ;; insert new
+  (if (or (nil? id) (= "" id))
+    (do 
+      (jdbc/with-db-transaction [dbh db]
+        (jdbc/execute! dbh ["insert into defini (is_language) values (0)"])
+        (let [id (:id (first (jdbc/query dbh ["select last_insert_rowid() as id"])))]
+          (jdbc/execute! dbh ["insert into dtext (did,lang,myword,phrase) values (?,?,?,?)" id lang myword phrase])
+          id)))
+    (do
+      (jdbc/with-db-transaction [dbh db]
+        (when (= '(0) (jdbc/execute! dbh ["update dtext set myword=?,phrase=? where did=? and lang=?" myword phrase id lang]))
+          (jdbc/execute! dbh ["insert into dtext (did,lang,myword,phrase) values (?,?,?,?)" id lang myword phrase])
+          ))
+      id)))
+
+(defn get-defini
+  [{:keys [id lang]}]
+  (first (jdbc/query db ["select did as id,lang,myword,phrase from dtext where did=? and lang=?" id lang])))
+
+(comment
+  (get-defini {:id 9 :lang 2})
+  (save-defini {:id nil :lang 1 :myword "foo" :phrase "foo like stuff"})
+  (save-defini {:id 9 :lang 2 :myword "foo" :phrase "even more foo like stuff"})
+  
+  (= '(1) (jdbc/execute! db ["update dtext set myword=?,phrase=? where did=? and lang=?" "foo" "bar" "8" "1"]))
+  )
 
 ;; https://stackoverflow.com/questions/39765943/clojure-java-jdbc-lazy-query
 ;; https://jdbc.postgresql.org/documentation/83/query.html#query-with-cursor
