@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head/>
+  <body>
+    New word+definition create
+    <br>
+    Message: {{sys-msg}}
+      <table>
+        <tr><td align="right">Lang</td><td align="right">Word</td><td>Definition</td></tr>
+        {{#word-def-list}}
+        <tr><td align="right">{{lang-text}}</td><td align="right">{{myword}}</td><td>{{phrase}}</td></tr>
+        {{/word-def-list}}
+      </table>
+    <form action="app">
+      <input type="hidden" name="action" value="list"/>
+      <input type="hidden" name="id" value="{{next-id}}"/>
+      Next batch starts with {{next-id}}.
+      <input type="submit" value="Next batch"/>
+    </form>
+  </body>
+</html>
