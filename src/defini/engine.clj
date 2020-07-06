@@ -26,9 +26,7 @@
                :body (render-any (assoc @params
                                         :sys-msg "trying all-language"
                                         :next-id (+ (Integer/parseInt (:id @params)) 10)
-                                        :word-def-list [{:lang-text "foo-lang"
-                                                         :myword "foo-word"
-                                                         :phrase "foo-def"}]) "resources/html/list.html")})
+                                        :word-def-list (sql/word-def-list id)) "resources/html/list.html")})
       true)
     false))
 
@@ -125,7 +123,7 @@
   [which-table]
   (loop [curr-state (:start which-table)]
     (let [result ((:fn curr-state))
-          next-state (if result (:true curr-state) (:false curr-state))]
+          next-state (get curr-state result)]
       (when (not= :wait next-state)
         (recur (get which-table next-state))))))
 
@@ -141,7 +139,7 @@
   [which-table]
   (loop [curr-state (:start which-table)]
     (let [result (what-is (str (:fn curr-state)))
-          next-state (if result (:true curr-state) (:false curr-state))]
+          next-state (get curr-state result)]
       (if (= :wait next-state)
         (println "Hit wait")
         (recur (get which-table next-state))))))
@@ -170,13 +168,13 @@
 ;; This is the entire logic for the definitionary behavior.
 (def s-table
   {
-   :start             {:fn have-params       :true :action-catreport :false :render-help}
-   :action-catreport  {:fn action-catreport  :true :wait             :false :action-savedefini}
-   :action-savedefini {:fn action-savedefini :true :wait             :false :action-list}
-   :action-list       {:fn action-list       :true :wait             :false :action-ext}
-   :action-ext        {:fn action-ext        :true :wait             :false :render-help}
-   :render-help       {:fn render-help       :true :wait             :false :wait}
-   :wait              {:fn wait              :true :wait             :false :wait}
+   :start             {:fn have-params       true :action-catreport false :render-help}
+   :action-catreport  {:fn action-catreport  true :wait             false :action-savedefini}
+   :action-savedefini {:fn action-savedefini true :wait             false :action-list}
+   :action-list       {:fn action-list       true :wait             false :action-ext}
+   :action-ext        {:fn action-ext        true :wait             false :render-help}
+   :render-help       {:fn render-help       true :wait             false :wait}
+   :wait              {:fn wait              true :wait             false :wait}
    })
 
 

@@ -42,6 +42,9 @@
   [{:keys [id lang]}]
   (first (jdbc/query db ["select did as id,lang,myword,phrase from dtext where did=? and lang=?" id lang])))
 
+(defn word-def-list [starting-id]
+  (jdbc/query db [""]))
+
 (comment
   (get-defini {:id 9 :lang 2})
   (save-defini {:id nil :lang 1 :myword "foo" :phrase "foo like stuff"})

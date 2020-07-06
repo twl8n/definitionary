@@ -22,12 +22,22 @@ Given that only the most popular single word is used for a given definition+lang
 
 #### Running via clojint aka clojure interpreter
 
-Assuming that clojint.sh and clojint.jar are in your path (for example, in ~/bin), and assuming that 
+Assuming that clojint.jar is ~/bin/clojint.jar, and assuming that you have
+this project in ~/src/definitionary, this should work:
 
 ```
 cd ~/src/definitionary
 java -cp ~/bin/clojint.jar:src clojint.core src/defini/server.clj -m defini.server/-main
 ```
+
+The clojint.jar "interpreter" must include all dependencies of definitionary. Yes, the dependencies are in the
+interpreter, and the dependencies are in this project. After adding a dependency, the interpreter has to be
+rebuilt, but there are scripts in the clojure-interpreter project to handle that. 
+
+On my machine with graalvm, `lien run` takes about 4
+seconds to launch the app. The interpreter launches is about 1 second. The timing difference will be much
+greater if you are running a standard JDK vs Graalvm.
+
 
 #### SQLite notes
 
