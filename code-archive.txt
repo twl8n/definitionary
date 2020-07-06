@@ -1,3 +1,18 @@
+(defn save-defini
+  "Insert or update a definition. Return the definition id"
+  [{:keys [id lang myword phrase]}]
+  ;; insert new
+  (if (or (nil? id) (= "" id))
+    (do 
+      (jdbc/with-db-transaction [dbh db]
+        (jdbc/execute! dbh ["insert into defini (id,lang,myword,phrase) values ((select max(id)+1 from defini),?,?,?)" lang myword phrase])
+        (:id (first (jdbc/query dbh ["select last_insert_rowid() as id"])))))
+    (do
+      (jdbc/with-db-transaction [dbh db]
+        (when (= '(0) (jdbc/execute! dbh ["update defini set myword=?,phrase=? where id=? and lang=?" myword phrase id lang]))
+          (jdbc/execute! dbh ["insert into defini (id,lang,myword,phrase) values ((select max(id)+1 from defini),?,?,?)" lang myword phrase])))
+      (:id (first (jdbc/query dbh ["select last_insert_rowid() as id"]))))))
+
 (defn pq [xx] (java.util.regex.Pattern/quote xx))
 
 #!/usr/bin/env bb

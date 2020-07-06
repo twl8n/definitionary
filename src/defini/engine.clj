@@ -19,14 +19,16 @@
 
 (defn action-list []
   (if (= :list (:action @params))
-    (do
+    (let [id-int (Integer/parseInt (or (:id @params) "1"))
+          next-id (+ id-int 10)
+          word-def-list (sql/word-def-list id-int)]
       (reset! output
               {:status 200
                :headers {"Content-Type" "text/html"}
                :body (render-any (assoc @params
                                         :sys-msg "trying all-language"
-                                        :next-id (+ (Integer/parseInt (:id @params)) 10)
-                                        :word-def-list (sql/word-def-list id)) "resources/html/list.html")})
+                                        :next-id next-id
+                                        :word-def-list word-def-list) "resources/html/list.html")})
       true)
     false))
 
@@ -68,15 +70,14 @@
 
 (defn action-savedefini []
   (if (= :savedefini (:action @params))
-    (do
-      (let [id (sql/save-defini (select-keys @params [:id :lang :myword :phrase]))]
+    (let [[id msg] (sql/save-defini (select-keys @params [:id :lang :myword :phrase]))]
         (reset! params (assoc @params :id id))
-        (sql/get-defini (select-keys @params [:id :lang])))
+        (sql/get-defini (select-keys @params [:id :lang]))
       (reset! output
               {:status 200
                :headers {"Content-Type" "text/html"}
                :body (render-any (assoc @params
-                                        :sys-msg (str "Saved" (:myword @params))
+                                        :sys-msg msg
                                         :all-language
                                         (map (fn [xx]
                                                (assoc xx :selected (= (str (:id xx)) (str (:lang @params)))))

@@ -8,49 +8,46 @@
    })
 
 (defn all-language []
-  (jdbc/query db ["select bb.myword, bb.did as id
-  from defini aa, dtext bb
+  (jdbc/query db ["select myword, id
+  from defini
   where
-    aa.is_language
+    is_language
     and 
-    bb.did =aa.id
-    and
-    bb.lang = aa.id"]))
+    lang = id"]))
 
 ;; jdbc/execute! returns number of rows as a list '(1) or '(0) and so on.
 ;; jdbc/query returns a list of hash where fields are keys ({:id 1})
 
 (defn save-defini
-  "Insert or update a definition. Return the definition id"
+  "Insert or update a definition. Return vector [id msg]."
   [{:keys [id lang myword phrase]}]
   ;; insert new
   (if (or (nil? id) (= "" id))
-    (do 
-      (jdbc/with-db-transaction [dbh db]
-        (jdbc/execute! dbh ["insert into defini (is_language) values (0)"])
-        (let [id (:id (first (jdbc/query dbh ["select last_insert_rowid() as id"])))]
-          (jdbc/execute! dbh ["insert into dtext (did,lang,myword,phrase) values (?,?,?,?)" id lang myword phrase])
-          id)))
-    (do
-      (jdbc/with-db-transaction [dbh db]
-        (when (= '(0) (jdbc/execute! dbh ["update dtext set myword=?,phrase=? where did=? and lang=?" myword phrase id lang]))
-          (jdbc/execute! dbh ["insert into dtext (did,lang,myword,phrase) values (?,?,?,?)" id lang myword phrase])
-          ))
-      id)))
+    (jdbc/with-db-transaction [dbh db]
+      (let [id (:id (first (jdbc/query dbh ["select max(id)+1 as id from defini"])))]
+        (if (= '(1) (jdbc/execute! dbh ["insert into defini (id,lang,myword,phrase) values (?,?,?,?)" id lang myword phrase]))
+          [id "Insert succeeded"]
+          [id "Insert failed"])))
+    (jdbc/with-db-transaction [dbh db]
+      [id (if (= '(1) (jdbc/execute! dbh ["update defini set myword=?,phrase=? where id=? and lang=?" myword phrase id lang]))
+            "Update succeeded"
+            (format "Update failed using id: %s lang: %s myword: %s phrase: %s" id lang myword phrase))])))
+
 
 (defn get-defini
   [{:keys [id lang]}]
-  (first (jdbc/query db ["select did as id,lang,myword,phrase from dtext where did=? and lang=?" id lang])))
+  (first (jdbc/query db ["select id,lang,myword,phrase from defini where id=? and lang=?" id lang])))
 
 (defn word-def-list [starting-id]
-  (jdbc/query db [""]))
+  (jdbc/query db ["select id,lang,myword,phrase from defini where id>=? and id-10<?" starting-id starting-id]))
 
 (comment
+  (let [starting-id 1] (jdbc/query db ["select id,lang,myword,phrase from defini where id>=? and id-10<?" starting-id starting-id]))
   (get-defini {:id 9 :lang 2})
   (save-defini {:id nil :lang 1 :myword "foo" :phrase "foo like stuff"})
   (save-defini {:id 9 :lang 2 :myword "foo" :phrase "even more foo like stuff"})
   
-  (= '(1) (jdbc/execute! db ["update dtext set myword=?,phrase=? where did=? and lang=?" "foo" "bar" "8" "1"]))
+  (= '(1) (jdbc/execute! db ["update defini set myword=?,phrase=? where id=? and lang=?" "foo" "bar" "8" "1"]))
   )
 
 ;; https://stackoverflow.com/questions/39765943/clojure-java-jdbc-lazy-query
