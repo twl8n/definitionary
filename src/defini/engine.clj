@@ -17,6 +17,21 @@
     false
     true))
 
+(defn action-list []
+  (if (= :list (:action @params))
+    (do
+      (reset! output
+              {:status 200
+               :headers {"Content-Type" "text/html"}
+               :body (render-any (assoc @params
+                                        :sys-msg "trying all-language"
+                                        :next-id (+ (Integer/parseInt (:id @params)) 10)
+                                        :word-def-list [{:lang-text "foo-lang"
+                                                         :myword "foo-word"
+                                                         :phrase "foo-def"}]) "resources/html/list.html")})
+      true)
+    false))
+
 (defn action-catreport []
   (if (= :catreport (:action @params))
     (do
@@ -48,25 +63,28 @@
            :headers {"Content-Type" "text/html"}
            :body (format
                   "<html><body>Unknown command: %s You probably want: <a href=\"app?action=catreport\">Cat report</a></body</html>"
-                  (name (:action @params)))})
+                  (name (or (:action @params) "<none>")))})
   true)
 
 (defn wait [] (prn wait))
 
 (defn action-savedefini []
-  (let [id (sql/save-defini (select-keys @params [:id :lang :myword :phrase]))]
-    (reset! params (assoc @params :id id))
-    (sql/get-defini (select-keys @params [:id :lang])))
-  (reset! output
-          {:status 200
-           :headers {"Content-Type" "text/html"}
-           :body (render-any (assoc @params
-                                    :sys-msg (str "Saved" (:myword @params))
-                                    :all-language
-                                    (map (fn [xx]
-                                           (assoc xx :selected (= (str (:id xx)) (str (:lang @params)))))
-                                         (sql/all-language))) "resources/html/new-defini.html")})
-  true)
+  (if (= :savedefini (:action @params))
+    (do
+      (let [id (sql/save-defini (select-keys @params [:id :lang :myword :phrase]))]
+        (reset! params (assoc @params :id id))
+        (sql/get-defini (select-keys @params [:id :lang])))
+      (reset! output
+              {:status 200
+               :headers {"Content-Type" "text/html"}
+               :body (render-any (assoc @params
+                                        :sys-msg (str "Saved" (:myword @params))
+                                        :all-language
+                                        (map (fn [xx]
+                                               (assoc xx :selected (= (str (:id xx)) (str (:lang @params)))))
+                                             (sql/all-language))) "resources/html/new-defini.html")})
+      true)
+    false))
 
 
 (comment
@@ -152,12 +170,13 @@
 ;; This is the entire logic for the definitionary behavior.
 (def s-table
   {
- :start             {:fn have-params       :true :action-catreport :false :render-help}
- :action-catreport  {:fn action-catreport  :true :wait             :false :action-savedefini}
- :action-savedefini {:fn action-savedefini :true :wait             :false :action-ext}
- :action-ext        {:fn action-ext        :true :wait             :false :render-help}
- :render-help       {:fn render-help       :true :wait             :false :wait}
- :wait              {:fn wait              :true :wait             :false :wait}
- })
+   :start             {:fn have-params       :true :action-catreport :false :render-help}
+   :action-catreport  {:fn action-catreport  :true :wait             :false :action-savedefini}
+   :action-savedefini {:fn action-savedefini :true :wait             :false :action-list}
+   :action-list       {:fn action-list       :true :wait             :false :action-ext}
+   :action-ext        {:fn action-ext        :true :wait             :false :render-help}
+   :render-help       {:fn render-help       :true :wait             :false :wait}
+   :wait              {:fn wait              :true :wait             :false :wait}
+   })
 
 
