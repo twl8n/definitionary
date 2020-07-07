@@ -19,7 +19,8 @@
   "Insert a definition. Return vector [id msg]."
   [{:keys [id lang myword phrase]}]
   (jdbc/with-db-transaction [dbh db]
-    (let [id (:id (first (jdbc/query dbh ["select max(id)+1 as id from defini"])))]
+    (let [id (or id
+                 (:id (first (jdbc/query dbh ["select max(id)+1 as id from defini"]))))]
       (if (= '(1) (jdbc/execute! dbh ["insert into defini (id,lang,myword,phrase) values (?,?,?,?)" id lang myword phrase]))
         [id "Insert succeeded"]
         [id "Insert failed"]))))

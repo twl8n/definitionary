@@ -91,14 +91,12 @@
 (defn insert-defini
   "id is nil, or id+lang doesn't exist."
   []
-  (let [id (:id @params)]
-    (if (or (nil? id) (= "" id))
-      (let [[inserted-id msg] (sql/insert-defini (select-keys @params [:id :lang :myword :phrase]))]
-        (reset! params (merge @params
-                              (sql/get-defini {:id inserted-id :lang (:lang @params)})
-                              {:sys-msg (str (:sys-msg @params) msg)}))
-        true)
-      false)))
+  (let [[inserted-id msg] (sql/insert-defini (select-keys @params [:id :lang :myword :phrase]))]
+    (reset! params (merge @params
+                          (sql/get-defini {:id inserted-id :lang (:lang @params)})
+                          {:sys-msg (str (:sys-msg @params) msg)}))
+    true))
+
 
 (defn update-defini
   "id+lang exists and we've been given the ok to overwrite"
@@ -229,7 +227,7 @@
    :action-edit       {:fn action-edit       true :wait            false :action-savedefini}
    :action-savedefini {:fn action-savedefini true :id-lang-exists   false :action-overwrite-ok}
    :id-lang-exists    {:fn id-lang-exists    true :ask-overwrite-ok false :insert-defini}
-   :insert-defini     {:fn insert-defini     true :edit-defini     false :wait} ;; false should be error page
+   :insert-defini     {:fn insert-defini     true :edit-defini     false :edit-defini} ;; false should be error page
    :ask-overwrite-ok  {:fn ask-overwrite-ok  true :wait            false :wait}
    :action-overwrite-ok {:fn action-overwrite-ok   true :update-defini     false :action-list}
    :update-defini     {:fn update-defini     true :edit-defini     false :wait} ;; false should be error page
