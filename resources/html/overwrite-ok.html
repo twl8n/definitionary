@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head/>
+  <body>
+    You are about to overwrite an existing id+lang entry.
+    <br>
+    Message: {{sys-msg}}
+    <br>
+    <table>
+      <tr><td>
+    <form action="app?action=overwrite-ok">
+      <input type="hidden" name="id" value="{{id}}"/>
+      <input type="hidden" name="lang" value="{{lang}}"/>
+      <input type="hidden" name="myword" value="{{myword}}"/>
+      <input type="hidden" name="phrase" value="{{phrase}}"/>
+      <input type="hidden" name="action" value="overwrite-ok"/>
+      <input type="submit" value="Overwrite OK"/>
+    </form>
+        </td>
+        <td>
+    <form action="app?action=edit">
+      <input type="hidden" name="id" value="{{id}}"/>
+      <input type="hidden" name="lang" value="{{lang}}"/>
+      <input type="hidden" name="myword" value="{{myword}}"/>
+      <input type="hidden" name="phrase" value="{{phrase}}"/>
+      <input type="hidden" name="action" value="edit"/>
+      <input type="submit" value="Edit/Cancel"/>
+    </form>
+        </td>
+      </tr>
+      </table>
+    <br>
+    Current entry:
+    <table>
+      <tr>
+        <td>def id</td>
+        <td align="right">Lang</td>
+        <td align="right">Word</td>
+        <td>Definition</td>
+      </tr>
+      {{#curr-word-def}}
+      <tr>
+        <td>{{id}}</td>
+        <td align="right">{{langname}}</td>
+        <td align="right">{{myword}}</td>
+        <td>{{phrase}}</td>
+      </tr>
+      {{/curr-word-def}}
+    </table>
+    <br>
+    New entry:
+    <table>
+      <tr>
+        <td>def id</td>
+        <td align="right">Lang</td>
+        <td align="right">Word</td>
+        <td>Definition</td>
+      </tr>
+      <tr>
+        <td>{{id}}</td>
+        <td align="right">{{langname}}</td>
+        <td align="right">{{myword}}</td>
+        <td>{{phrase}}</td>
+      </tr>
+    </table>
+  </body>
+</html>

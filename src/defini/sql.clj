@@ -15,6 +15,31 @@
     and 
     lang = id"]))
 
+(defn insert-defini
+  "Insert a definition. Return vector [id msg]."
+  [{:keys [id lang myword phrase]}]
+  (jdbc/with-db-transaction [dbh db]
+    (let [id (:id (first (jdbc/query dbh ["select max(id)+1 as id from defini"])))]
+      (if (= '(1) (jdbc/execute! dbh ["insert into defini (id,lang,myword,phrase) values (?,?,?,?)" id lang myword phrase]))
+        [id "Insert succeeded"]
+        [id "Insert failed"]))))
+
+(defn update-defini
+  "Update a definition. Return vector [id msg]."
+  [{:keys [id lang myword phrase]}]
+  (jdbc/with-db-transaction [dbh db]
+    [id (if (= '(1) (jdbc/execute! dbh ["update defini set myword=?,phrase=? where id=? and lang=?" myword phrase id lang]))
+          "Update succeeded"
+          "Update failed")]))
+
+
+(defn id-lang-exists [{:keys [id lang]}]
+  (let [result (jdbc/query db ["select * from defini where id=? and lang=?" id lang])]
+    (if (empty? (first result))
+      false
+      true)))
+
+
 ;; jdbc/execute! returns number of rows as a list '(1) or '(0) and so on.
 ;; jdbc/query returns a list of hash where fields are keys ({:id 1})
 
@@ -35,13 +60,17 @@
               (jdbc/execute! dbh ["insert into defini (id, lang, myword, phrase) values (?,?,?,?)" id lang myword phrase])
               "Insert new lang succeeded"))])))
 
+(defn langname
+  [{:keys [lang]}]
+  (:langname (first (jdbc/query db ["select myword langname from defini where id=? and lang=?" lang lang]))))
+
 
 (defn get-defini
   [{:keys [id lang]}]
-  (first (jdbc/query db ["select id,lang,myword,phrase from defini where id=? and lang=?" id lang])))
+  (first (jdbc/query db ["select id,lang,myword,phrase,(select myword from defini where id=xx.lang and lang=xx.lang) langname from defini xx where id=? and lang=?" id lang])))
 
 (defn word-def-list [starting-id]
-  (jdbc/query db ["select id,(select myword from defini where id=xx.lang and lang=xx.lang) lang_name, lang, myword, phrase from defini xx where id>=? and id-10<?" starting-id starting-id]))
+  (jdbc/query db ["select id,(select myword from defini where id=xx.lang and lang=xx.lang) langname, lang, myword, phrase from defini xx where id>=? and id-10<?" starting-id starting-id]))
 
 (comment
   (let [starting-id 1] (jdbc/query db ["select id,lang,myword,phrase from defini where id>=? and id-10<?" starting-id starting-id]))

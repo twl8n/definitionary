@@ -1,8 +1,8 @@
 #### Definitionary inverse dictionary
 
-Demo and API for the inverse dictionary based on unique definitions.
+Demo and API for the inverse dictionary based on unique definitions ids.
 
-Example for "car" in , the 4 wheel vehicle, typically a passenger vehicle, typically powered by internal combustion.
+Example for "car" being a 4 wheel vehicle, typically a passenger vehicle, typically powered by internal combustion.
 
 The definitionary id, thus a "car" in any language is 4. 
 
@@ -32,6 +32,42 @@ the UI includes some mouse-over or similar feature for the text that reveals the
 selected language.
 
 Given that only the most popular single word is used for a given definition+language, we only supply one word.
+
+#### Initialize the database
+
+The production Definitionary (and its database) will reside on a server since there can be only one,
+canonical, reference definitionary. However for development purposes, you will want a local database. You'll
+need sqlite3.
+
+Here is a terminal bash shell session transcript of initializing the database. 
+
+```bash
+> sqlite3 defini.db
+SQLite version 3.24.0 2018-06-04 14:10:15
+Enter ".help" for usage hints.
+sqlite> .read schema.sql
+sqlite> .read initialize.sql
+Cylinder head in all 3 languages
+lang        myword         phrase
+----------  -------------  --------------------------------------------------------------------------------------------------------------------
+English     cylinder head  A part of an internal combustion engine, usually made as a removable piece, that closes one end of the engine's cylinders.
+Française   culasse        Partie amovible d'un moteur assurant l'étanchéité d'un ou plusieurs de ses cylindres
+Española    culata         Parte extraíble de un motor que sella uno o más de sus cilindros
+All three languages as defined by each other.
+id          lang_name   in          target_lang  is          translated_name  in_lang
+----------  ----------  ----------  -----------  ----------  ---------------  ----------
+1           English      in         English       is         English          1
+1           English      in         French        is         Anglais          2
+1           English      in         Spanish       is         Inglés           3
+2           Française    in         Anglais       is         French           1
+2           Française    in         Française     is         Française        2
+2           Française    in         Espagnol      is         Francés          3
+3           Española     in         Inglés        is         Spanish          1
+3           Española     in         Francés       is         Espagnol         2
+3           Española     in         Española      is         Española         3
+sqlite> .q
+>
+```
 
 
 #### Running via clojint aka clojure interpreter
