@@ -1,5 +1,13 @@
 
-- 2020-07-02 Need word+defini create, edit. 
++ 2020-07-06 Need to be able to save existing id, new lang. 
+
+How to keep from overwriting existing id,lang accidentally? UI needs a "change lang" button or something.
+
+Can't change the lang of a defini, but that's not "save-as" or something.
+
+Disable lang change on edit. Enable only on create.
+
++ 2020-07-02 Need word+defini create, edit. 
 
 Choose lang.
 Search for existing, if found display edit link(s).

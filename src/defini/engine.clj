@@ -32,15 +32,20 @@
       true)
     false))
 
-(defn action-catreport []
-  (if (= :catreport (:action @params))
+(defn action-edit []
+  (if (= :edit (:action @params))
     (do
       (reset! output
               {:status 200
                :headers {"Content-Type" "text/html"}
-               :body (render-any (assoc @params
-                                        :sys-msg "trying all-language"
-                                        :all-language (sql/all-language)) "resources/html/new-defini.html")})
+               :body (render-any (merge
+                                  @params
+                                  (sql/get-defini (select-keys @params [:id :lang]))
+                                  {:sys-msg "trying all-language"
+                                   :all-language (map (fn [xx]
+                                                        (assoc xx :selected (= (str (:id xx)) (str (:lang @params)))))
+                                                      (sql/all-language))})
+                                 "resources/html/new-defini.html")})
       true)
     false))
 
@@ -62,7 +67,7 @@
           {:status 200
            :headers {"Content-Type" "text/html"}
            :body (format
-                  "<html><body>Unknown command: %s You probably want: <a href=\"app?action=catreport\">Cat report</a></body</html>"
+                  "<html><body>Unknown command: %s You probably want: <a href=\"app?action=edit\">Edit</a></body</html>"
                   (name (or (:action @params) "<none>")))})
   true)
 
@@ -71,8 +76,7 @@
 (defn action-savedefini []
   (if (= :savedefini (:action @params))
     (let [[id msg] (sql/save-defini (select-keys @params [:id :lang :myword :phrase]))]
-        (reset! params (assoc @params :id id))
-        (sql/get-defini (select-keys @params [:id :lang]))
+      (reset! params (merge @params (sql/get-defini (select-keys @params [:id :lang]))))
       (reset! output
               {:status 200
                :headers {"Content-Type" "text/html"}
@@ -169,13 +173,13 @@
 ;; This is the entire logic for the definitionary behavior.
 (def s-table
   {
-   :start             {:fn have-params       true :action-catreport false :render-help}
-   :action-catreport  {:fn action-catreport  true :wait             false :action-savedefini}
-   :action-savedefini {:fn action-savedefini true :wait             false :action-list}
-   :action-list       {:fn action-list       true :wait             false :action-ext}
-   :action-ext        {:fn action-ext        true :wait             false :render-help}
-   :render-help       {:fn render-help       true :wait             false :wait}
-   :wait              {:fn wait              true :wait             false :wait}
+   :start             {:fn have-params       true :action-edit false :render-help}
+   :action-edit       {:fn action-edit       true :wait        false :action-savedefini}
+   :action-savedefini {:fn action-savedefini true :wait        false :action-list}
+   :action-list       {:fn action-list       true :wait        false :action-ext}
+   :action-ext        {:fn action-ext        true :wait        false :render-help}
+   :render-help       {:fn render-help       true :wait        false :wait}
+   :wait              {:fn wait              true :wait        false :wait}
    })
 
 

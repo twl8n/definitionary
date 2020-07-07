@@ -3,12 +3,14 @@
 -- For the text describing a language dtext.id = dtext.lang
 create table defini (
         id int not null,           -- definition id
+        lang int,                  -- self-ref to id of the language of this definition
         is_language int default 0, -- default to false
-        lang int,    -- fk to id of the language of this definition
-        phrase text, -- definition text in the language
-        myword text -- single word or phrase
+        myword text,   -- single word or phrase
+        phrase text    -- definition text in the language
         );
 
-create unique index idx1 on defini (id, lang, phrase, myword);
+-- 2020-07-06 Are both of these necessary?
+create unique index idx1 on defini (id, lang);
+create unique index idx2 on defini (id, lang, phrase, myword);
 
 

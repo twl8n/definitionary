@@ -31,7 +31,9 @@
     (jdbc/with-db-transaction [dbh db]
       [id (if (= '(1) (jdbc/execute! dbh ["update defini set myword=?,phrase=? where id=? and lang=?" myword phrase id lang]))
             "Update succeeded"
-            (format "Update failed using id: %s lang: %s myword: %s phrase: %s" id lang myword phrase))])))
+            (do
+              (jdbc/execute! dbh ["insert into defini (id, lang, myword, phrase) values (?,?,?,?)" id lang myword phrase])
+              "Insert new lang succeeded"))])))
 
 
 (defn get-defini
@@ -39,7 +41,7 @@
   (first (jdbc/query db ["select id,lang,myword,phrase from defini where id=? and lang=?" id lang])))
 
 (defn word-def-list [starting-id]
-  (jdbc/query db ["select id,lang,myword,phrase from defini where id>=? and id-10<?" starting-id starting-id]))
+  (jdbc/query db ["select id,(select myword from defini where id=xx.lang and lang=xx.lang) lang_name, lang, myword, phrase from defini xx where id>=? and id-10<?" starting-id starting-id]))
 
 (comment
   (let [starting-id 1] (jdbc/query db ["select id,lang,myword,phrase from defini where id>=? and id-10<?" starting-id starting-id]))

@@ -2,14 +2,27 @@
 
 Demo and API for the inverse dictionary based on unique definitions.
 
-The inverse dictionary uses definitions as the primary key. Each concept is assigned a unique id (numeric at
-this time). People editing the definitionary must decide how finely to quantize meanings, but in general, very
-fine distinctions are good. Each definition has text describing it in several languages. Definition text in
-each language is linked to words or phrases in that language. Related words or phrases are ordered by how
-commonly that word is used for the given definition.
+Example for "car" in , the 4 wheel vehicle, typically a passenger vehicle, typically powered by internal combustion.
+
+The definitionary id, thus a "car" in any language is 4. 
+
+```
+id          lang        myword         phrase
+----------  ----------  -------------  --------------------------------------------------------------------------------------------------------------------
+4           English     cylinder head  A part of an internal combustion engine, usually made as a removable piece, that closes one end of the engine's cylinders.
+4           Française   culasse        Partie amovible d'un moteur assurant l'étanchéité d'un ou plusieurs de ses cylindres
+4           Española    culata         Parte extraíble de un motor que sella uno o más de sus cilindros
+```
+
+
+The inverse dictionary uses definition id as the primary key. Definition id + language id is unique. People
+editing the definitionary must decide how finely to quantize meanings, but in general, very fine distinctions
+are good. Each definition has text describing it in several languages. Definition text in each language is
+linked to words or phrases in that language. We currently have a single word. Secondary words can be added
+later by linking definition synonyms, and the data will include the strength of the synonym relationship.
 
 Definitionary documents called "Language Independent Documents" or LIDs are created by simply stringing
-together definitions. Subject-verb-object order is left to the human reader to interpret. While potentially
+together definition ids. Subject-verb-object order is left to the human reader to interpret. While potentially
 confusing, people are smart, and are perfectly capable of gleaning meaning from "sentences" with the wrong
 order. 
 
@@ -18,7 +31,8 @@ simply the lookup of the most common word in the selected output language for th
 the UI includes some mouse-over or similar feature for the text that reveals the text of the definition in the
 selected language.
 
-Given that only the most popular single word is used for a given definition+language, we may only supply one word.
+Given that only the most popular single word is used for a given definition+language, we only supply one word.
+
 
 #### Running via clojint aka clojure interpreter
 

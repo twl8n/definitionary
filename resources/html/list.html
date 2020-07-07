@@ -6,9 +6,19 @@
     <br>
     Message: {{sys-msg}}
       <table>
-        <tr><td align="right">Lang</td><td align="right">Word</td><td>Definition</td></tr>
+        <tr>
+          <td>def id</td>
+          <td align="right">Lang</td>
+          <td align="right">Word</td>
+          <td>Definition</td>
+        </tr>
         {{#word-def-list}}
-        <tr><td align="right">{{id}}</td><td align="right">{{myword}}</td><td>{{phrase}}</td></tr>
+        <tr>
+          <td>{{id}}</td>
+          <td align="right">{{lang_name}}</td>
+          <td align="right"><a href="app?action=edit&id={{id}}&lang={{lang}}">{{myword}}</a></td>
+          <td>{{phrase}}</td>
+        </tr>
         {{/word-def-list}}
       </table>
     <form action="app">

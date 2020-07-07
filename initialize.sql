@@ -59,7 +59,7 @@ select 'Cylinder head in all 3 languages';
 .headers on
 .mode column
 
-select (select myword from defini where id=outx.lang) as lang,myword, phrase from defini outx where id=4 and lang in (1,2,3);
+select (select myword from defini where id=outx.lang and lang=outx.lang) as lang,myword, phrase from defini outx where id=4;
 
 .headers off
 .mode column
