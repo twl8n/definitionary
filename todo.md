@@ -1,4 +1,16 @@
 
+- 2020-07-08 Add auth and deploy on server. What about https on Lightsail?
+
+https://gist.github.com/karanth/8633258
+
+https://github.com/remvee/ring-basic-authentication
+
+https://github.com/cemerick/friend
+
+https://stackoverflow.com/questions/13702003/how-to-implement-user-authentication-using-clojure-liberator
+
+Also, what about routes?
+
 + 2020-07-06 Need to be able to save existing id, new lang. 
 
 How to keep from overwriting existing id,lang accidentally? UI needs a "change lang" button or something.

@@ -9,7 +9,8 @@
             [ring.adapter.jetty :as ringa]
             [ring.util.response :as ringu]
             [ring.middleware.params :refer [wrap-params]]
-            [ring.middleware.multipart-params :refer [wrap-multipart-params]])
+            [ring.middleware.multipart-params :refer [wrap-multipart-params]]
+            [ring.middleware.basic-authentication :refer [wrap-basic-authentication]])
   (:gen-class))
 
 ;; This throws an exception if action is nil. Work around by setting a default :action.
@@ -34,6 +35,7 @@
                         (keyword trim-vv)
                         trim-vv))))
            {} (:params request)))
+  (prn @defini.engine/params)
   (engine/run defini.engine/s-table)
   @defini.engine/output)
 
