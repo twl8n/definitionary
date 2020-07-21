@@ -19,9 +19,9 @@
 
 (defn action-list []
   (if (= :list (:action @params))
-    (let [id-int (Integer/parseInt (or (:id @params) "1"))
-          next-id (+ id-int 10)
-          word-def-list (sql/word-def-list id-int)]
+    (let [starting-id (or (:id @params)  1)
+          next-id (+ starting-id 10)
+          word-def-list (sql/word-def-list starting-id)]
       (reset! output
               {:status 200
                :headers {"Content-Type" "text/html"}

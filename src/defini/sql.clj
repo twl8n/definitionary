@@ -22,7 +22,7 @@
     (let [id (or id
                  (:id (first (jdbc/query dbh ["select max(id)+1 as id from defini"]))))]
       (if (= '(1) (jdbc/execute! dbh ["insert into defini (id,lang,myword,phrase) values (?,?,?,?)" id lang myword phrase]))
-        [id "Insert succeeded"]
+        [id (format "Insert succeeded: %s" id)]
         [id "Insert failed"]))))
 
 (defn update-defini
